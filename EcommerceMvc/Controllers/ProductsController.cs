@@ -69,7 +69,6 @@ namespace EcommerceMvc.Controllers
                 };
                 dataToIndex.Items.Add(productId, quantity);
                 
-
                 var indexExist = client.Get<IndexToElasticSearch>(new GetRequest("usercart", "IndexToElasticSearch", user.Id));
 
                 if ( indexExist.IsValid && !indexExist.Found)
