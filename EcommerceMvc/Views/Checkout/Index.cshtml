@@ -1,0 +1,53 @@
+﻿@model EcommerceMvc.Models.CheckoutModel
+
+@{
+    ViewBag.Title = "checkout Model";
+    
+}
+
+<div id="checkoutGrid">
+    
+        @if (Model != null)
+        {
+            <div class ="row">
+                <table>
+                    <thead>
+                    <tr><th> Product</th>
+                        <th> Quantity</th>
+                        <th> Price</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var productData in Model.Products)
+                    {
+                        var listOfValues = new List<SelectListItem>();
+                        for (int i = 1; i <= productData.Quantity; i++)
+                        {
+                            listOfValues.Add(i == productData.Quantity 
+                                ? new SelectListItem() {Text = i.ToString(), Value = i.ToString(), Selected = true} 
+                                : new SelectListItem() {Text = i.ToString(), Value = i.ToString()});
+                        }
+                        <tr>
+                            <td>
+                                @productData.Product.ProductName
+                            </td>
+                            <td>
+                                @Html.DropDownList("Dropdown" ,new SelectList(listOfValues, "Value", "Text" ))
+                            </td>
+                            <td>
+                                @productData.Price
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                    <tbody>
+                    <tr>
+                        <td> Total Price:</td>
+                        <td>@string.Format("{0:C}", @Model.TotalPriceOfAllProducts);
+                           </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>        
+        }
+    
+</div>

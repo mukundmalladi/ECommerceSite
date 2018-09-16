@@ -1,0 +1,40 @@
+﻿@model EcommerceMvc.Models.AllProducts
+
+@{
+    ViewBag.Title = "Products Stuff";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="detailsDiv">
+
+@if (Model != null)
+{
+    
+        <h2>Hello World</h2>
+        <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>AddTo Cart</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.InventoriesModels)
+                    {
+                        <tr>
+
+                            <td>@product.ProductName</td>
+                            <td>@product.ItemsCount</td>
+                            <td>
+                                <button onclick="AddToCart(@product.Id, 1)">Add To Cart</button>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        }
+</div>
