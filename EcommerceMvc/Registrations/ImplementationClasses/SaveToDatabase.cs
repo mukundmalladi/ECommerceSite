@@ -22,5 +22,34 @@ namespace EcommerceMvc.Helper
         {
             _db.Save(obj);
         }
+
+        public ITransaction GetTraction()
+        {
+            return _db.GetTransaction();
+        }
+
+        public void Update(object obj)
+        {
+            _db.Update(obj);
+        }
+
+        public abstract class TransactionScope : IDisposable
+        {
+            public abstract void Commit();
+            public abstract void Dispose();
+        }
+
+        public class Transaction : TransactionScope
+        {
+            public override void Commit()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Dispose()
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

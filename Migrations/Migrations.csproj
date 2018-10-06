@@ -45,11 +45,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreateTable.cs" />
-    <Compile Include="InventoryTable.cs" />
-    <Compile Include="ProductTable.cs" />
+    <Compile Include="8_AddressTable.cs" />
+    <Compile Include="1_CreateTable.cs" />
+    <Compile Include="2_InventoryTable.cs" />
+    <Compile Include="4_OrderTable.cs" />
+    <Compile Include="5_ProductOrderTable.cs" />
+    <Compile Include="3_ProductTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="7_ShippingAddressTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

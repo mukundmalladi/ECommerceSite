@@ -52,7 +52,7 @@ namespace EcommerceMvc
         {
             var exception = Server.GetLastError();
             Server.ClearError();
-            Response.Redirect("~/Views/Error/index.cshtml");
+            Response.Redirect("~/Views/Error/Index.cshtml");
         }
     }
 }

@@ -30,7 +30,8 @@ function AddToCart(a, b) {
         success: function (response) {
             var result = response;
             var data = result.Data;
-            if (data.Success ==  true) {
+            if (data.Success == true) {
+                Alert("Added to cart successfully");
             }
         }
        

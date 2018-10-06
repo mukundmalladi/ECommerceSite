@@ -1,0 +1,194 @@
+﻿@model EcommerceMvc.Models.FullCheckOutModel
+
+@{
+    ViewBag.Title = "checkout Model";
+    //.("companyname", "Company name is required.");
+
+    //if (IsPost)
+    //{
+    //    string companyname = Request.Form["addressLine1"];
+    //    string contactname = Request.Form["contactname"];
+    //    int employeecount = Request.Form["employees"].AsInt();
+
+    //}
+}
+
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/checkout.js")"></script>
+<div id="checkoutGrid">
+
+    @if (Model != null)
+{
+         // using (Html.BeginForm("Checkout", "Checkout"))
+         // {
+          @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+     <form class="form-horizontal" method="post"  name="CheckoutForm">
+    <div class="row">
+        <table>
+            <thead>
+            <tr>
+                <th> Product</th>
+                <th> Quantity</th>
+                <th> Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var productData in Model.ProductsData)
+            {
+                <tr class="productData">
+                    <td class="productsId" style="display: none" id="productId">
+                        @productData.ProductData.Id
+                    </td>
+                    <td class="products" id="productName">
+                        @productData.ProductData.ProductName
+                    </td>
+                    <td class="quantity" id="quantity">
+                        <input type="text" value="@productData.Quantity" onkeyup="UpdatePrice(this)" />
+                    </td>
+                    <td class="originalPrice" style="display: none" id="originalPrice">
+                        @productData.Price
+                    </td>
+                    <td class="price" id="calculatedPrice">
+                        @productData.Price
+                    </td>
+                </tr>
+            }
+            </tbody>
+            <tbody>
+            <tr>
+                <td> Total Price:</td>
+                <td id="totalPrice">
+                    @string.Format("{0:C}", @Model.TotalPriceOfAllProducts);
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group" id="checkout">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="Checkout" class="col-md-offset-2 col-md-10" type="button" value="Checkout" onclick="ShowOtherStory()" />
+        </div>
+    </div>
+    <div id="addressDiv" class="form-group">
+        <table>
+            <thead>
+            <text Address: />
+            </thead>
+            <tbody>
+            <tr>
+                <td><label type="text">Address Line 1 : </label></td>
+                <td><input type="text" id="addressLine1" maxlength="20" /></td>
+
+            </tr>
+
+            <tr>
+                <td><label type="text">Address Line 2 : </label></td>
+                <td><input type="text" id="addressLine2" maxlength="20" /></td>
+                @Html.ValidationMessageFor(model => model.AddressLine2)
+            </tr>
+
+            <tr>
+                <td><label type="text">PoBox : </label></td>
+                <td><input type="text" id="poBox" maxlength="20" /></td>
+                @Html.ValidationMessageFor(model => model.PoBox)
+            </tr>
+            <tr>
+                <td><label type="text">ZipCode : </label></td>
+                <td><input type="text" id="zipCode" maxlength="20" /></td>
+                @Html.ValidationMessageFor(model => model.PoBox)
+            </tr>
+            <tr>
+                <td><label type="text">Apartment No : </label></td>
+                <td><input type="text" id="apartmentNo" maxlength="20" /></td>
+                @Html.ValidationMessageFor(model => model.ApartmentNo)
+            </tr>
+            <tr>
+                <td><label type="text">House No : </label></td>
+                <td><input type="text" id="houseNo" maxlength="20" /></td>
+                @Html.ValidationMessageFor(model => model.HouseNo)
+            </tr>
+            <tr>
+                <td><label type="text">State : </label></td>
+                <td>
+                    <select id="state">
+                        <option value="">Select</option>
+                        <option value="AL">Alabama</option>
+                        <option value="AK">Alaska</option>
+                        <option value="AZ">Arizona</option>
+                        <option value="AR">Arkansas</option>
+                        <option value="CA">California</option>
+                        <option value="CO">Colorado</option>
+                        <option value="CT">Connecticut</option>
+                        <option value="DE">Delaware</option>
+                        <option value="DC">District Of Columbia</option>
+                        <option value="FL">Florida</option>
+                        <option value="GA">Georgia</option>
+                        <option value="HI">Hawaii</option>
+                        <option value="ID">Idaho</option>
+                        <option value="IL">Illinois</option>
+                        <option value="IN">Indiana</option>
+                        <option value="IA">Iowa</option>
+                        <option value="KS">Kansas</option>
+                        <option value="KY">Kentucky</option>
+                        <option value="LA">Louisiana</option>
+                        <option value="ME">Maine</option>
+                        <option value="MD">Maryland</option>
+                        <option value="MA">Massachusetts</option>
+                        <option value="MI">Michigan</option>
+                        <option value="MN">Minnesota</option>
+                        <option value="MS">Mississippi</option>
+                        <option value="MO">Missouri</option>
+                        <option value="MT">Montana</option>
+                        <option value="NE">Nebraska</option>
+                        <option value="NV">Nevada</option>
+                        <option value="NH">New Hampshire</option>
+                        <option value="NJ">New Jersey</option>
+                        <option value="NM">New Mexico</option>
+                        <option value="NY">New York</option>
+                        <option value="NC">North Carolina</option>
+                        <option value="ND">North Dakota</option>
+                        <option value="OH">Ohio</option>
+                        <option value="OK">Oklahoma</option>
+                        <option value="OR">Oregon</option>
+                        <option value="PA">Pennsylvania</option>
+                        <option value="RI">Rhode Island</option>
+                        <option value="SC">South Carolina</option>
+                        <option value="SD">South Dakota</option>
+                        <option value="TN">Tennessee</option>
+                        <option value="TX">Texas</option>
+                        <option value="UT">Utah</option>
+                        <option value="VT">Vermont</option>
+                        <option value="VA">Virginia</option>
+                        <option value="WA">Washington</option>
+                        <option value="WV">West Virginia</option>
+                        <option value="WI">Wisconsin</option>
+                        <option value="WY">Wyoming</option>
+                    </select>
+                    @Html.ValidationMessageFor(model => model.State)
+                </td>
+            </tr>
+            </tbody>
+            <tbody id="creditCardInfo">
+            <tr>
+                <td><label> CardNo:</label></td>
+                <td><input type="text" maxlength="16" min="16" id="creditCardInfo" /></td>
+                <td><label>Please note address should be same as shipping address</label></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group" id="submitButton">
+        <div class="col-md-offset-2 col-md-10">
+            <!--<input type="submit" value="Submit" class="submit" />-->
+
+            <input type="submit" value="Checkout" class="btn btn-default" id="SubmitCheckOutModel" onclick="validateForm()" />
+        </div>
+    </div>
+    </form>
+      }
+    
+
+</div>
