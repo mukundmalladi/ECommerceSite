@@ -10,14 +10,14 @@ function validateForm() {
     if (!confirm("Confirm you want to checkout")) {
         return;
     } 
-    var addressLine1 = document.forms["CheckoutForm"]["addressLine1"].value;
-    var addressLine2 = document.forms["CheckoutForm"]["addressLine2"].value;
-    var poBox = document.forms["CheckoutForm"]["poBox"].value;
-    var apartmentNo = document.forms["CheckoutForm"]["apartmentNo"].value;
-    var houseNo = document.forms["CheckoutForm"]["houseNo"].value;
-    var state = document.forms["CheckoutForm"]["state"].value;
-    var creditCard = document.forms["CheckoutForm"]["creditCardInfo"].value;
-    var zipCode = document.forms["CheckoutForm"]["zipCode"].value;
+        var addressLine1 = document.forms["CheckoutForm"]["addressLine1"].value;
+        var addressLine2 = document.forms["CheckoutForm"]["addressLine2"].value;
+        var poBox = document.forms["CheckoutForm"]["poBox"].value;
+        var apartmentNo = document.forms["CheckoutForm"]["apartmentNo"].value;
+        var houseNo = document.forms["CheckoutForm"]["houseNo"].value;
+        var state = document.forms["CheckoutForm"]["state"].value;
+        var creditCard = document.forms["CheckoutForm"]["creditCardInfo"].value;
+        var zipCode = document.forms["CheckoutForm"]["zipCode"].value;
     
 
     var productsData = [];

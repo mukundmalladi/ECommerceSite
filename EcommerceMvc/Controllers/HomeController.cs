@@ -58,7 +58,7 @@ namespace EcommerceMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]//TODO check this
-        public JsonResult RegisterSave(RegisterModel registerModel)
+        public ActionResult RegisterSave(RegisterModel registerModel)
         {
             var salt = GenerateSalt();
 
@@ -66,18 +66,18 @@ namespace EcommerceMvc.Controllers
             {
                 Password = registerModel.Password,
                 CreateDate = DateTime.Now,
-                CreatedBy = HttpContext.User.Identity.Name,
+                CreatedBy = registerModel.FirstName + registerModel.LastName,
                 EmailId = registerModel.EmailId,
                 LastName = registerModel.LastName,
                 FirstName = registerModel.FirstName,
-                UserName = registerModel.UserName,
+                UserName = registerModel.EmailId,
                 Salt = Convert.ToBase64String(salt)
             };
             var password = GenerateHash(salt, registerModel.Password);
             person.Password = password;
-          _saveToDatabase.Save(person);
-
-          return new JsonResult();
+           _saveToDatabase.Save(person);
+            TempData["UserMessage"] = new SuccessMessage { CssClassName = "alert alert-success", Title = "Register Successful", Message = "Operation Done." };
+            return RedirectToAction("Index", "Home");
         }
     
         public ActionResult Logout()
@@ -91,9 +91,21 @@ namespace EcommerceMvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel loginModel)
         {
+            
 
-            var getUserFromDataBase = new PersonQuery().GetFromDatabase(loginModel.UserName);
-    
+            if (!ModelState.IsValid)
+            {
+                return View(new LoginModel());
+            }
+
+            var getUserFromDataBase = new PersonQuery().GetFromDatabase(loginModel.EmailId);
+            if (getUserFromDataBase.Id == 0)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("", "Invalid UserName or Password");
+                return View(new LoginModel());
+            }
+          
             var salt = Convert.FromBase64String(getUserFromDataBase.Salt);
 
             var generatehash = GenerateHash(salt, loginModel.Password);
@@ -117,12 +129,11 @@ namespace EcommerceMvc.Controllers
                 string encTicket = FormsAuthentication.Encrypt(authTicket);
                 HttpCookie faCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket);
                 Response.Cookies.Add(faCookie);
-                
+                TempData["UserMessage"] = new SuccessMessage{ CssClassName = "alert alert-success", Title = "Login Successful", Message = "Operation Done." };
                 return RedirectToAction("Index", "Home");
             }
-
-            //TODO error page
-            return new JsonResult();
+            ModelState.AddModelError("", "Invalid UserName or Password");
+            return View(new LoginModel());
         }
         
         private string GenerateHash(byte[] salt, string password)
@@ -146,5 +157,12 @@ namespace EcommerceMvc.Controllers
             }
           return bytes;
         }
+    }
+
+    public class SuccessMessage
+    {
+        public string CssClassName { get; set; }
+        public string Title { get; set; }
+        public string Message { get; set; }
     }
 }

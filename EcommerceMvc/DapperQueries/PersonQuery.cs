@@ -11,9 +11,9 @@ namespace EcommerceMvc.Dapper
 {
     public class PersonQuery
     {
-        public Person GetFromDatabase(string userName)
+        public Person GetFromDatabase(string emailId)
         {
-            var sql = @"select * from [ECommerce].[dbo].[Person] where username = @username";
+            var sql = @"select * from [ECommerce].[dbo].[Person] where emailId = @emailId";
             using (var sqlConn = new SqlConnection("Data Source=.;Database=ECommerce;Integrated Security=True;"))
             {
                 try
@@ -22,7 +22,7 @@ namespace EcommerceMvc.Dapper
                     var persons = sqlConn.Query<Person>(sql,
                         new
                         {
-                            username = new DbString {Value = userName, IsFixedLength = false, Length = 9, IsAnsi = true}
+                            emailId = new DbString {Value = emailId, IsFixedLength = false, Length = 9, IsAnsi = true}
                         }).ToList();
 
                     return persons.First();
@@ -34,7 +34,6 @@ namespace EcommerceMvc.Dapper
                 }
             }
             return new Person();
-
         }
 
         public PersonQuery WithPersonName(string personName)
