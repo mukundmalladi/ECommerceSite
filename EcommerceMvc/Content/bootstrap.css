@@ -490,6 +490,8 @@ mark,
   border-radius: 0.25rem;
   max-width: 100%;
   height: auto;
+    position: relative;
+
 }
 
 .figure {
@@ -594,6 +596,8 @@ pre code {
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+  margin-top: 20px;
+    
 }
 
 .no-gutters {
@@ -8921,7 +8925,7 @@ a.text-dark:hover, a.text-dark:focus {
   color: #212529 !important;
 }
 
-.text-muted {
+.text-muted .price{
   color: #6c757d !important;
 }
 
@@ -9026,5 +9030,22 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6;
   }
+}
+
+.thumbnail {
+    position: relative;
+}
+
+.caption {
+    position: absolute;
+    top: 45%;
+    left: 0;
+    width: 100%;
+}
+
+.footer > .container {
+    padding-top: 60px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
 /*# sourceMappingURL=bootstrap.css.map */

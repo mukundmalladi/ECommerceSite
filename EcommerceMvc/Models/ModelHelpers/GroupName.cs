@@ -3,7 +3,7 @@
     public enum GroupName
     {
         Beauty,
-        Automotives,
+        Automobile,
         Herbals
     }
 }

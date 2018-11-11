@@ -36,6 +36,8 @@ namespace EcommerceMvc.Models
         public DateTime UpdateDate { get; set; }
         [Column]
         public string UpdatedBy { get; set; }
+        [Column]
+        public string City { get; set; }
 
     }
 }

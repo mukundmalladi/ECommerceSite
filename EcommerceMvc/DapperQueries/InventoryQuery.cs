@@ -26,7 +26,6 @@ namespace EcommerceMvc.Dapper
                             {
                                 Value = groupName,
                                 IsFixedLength = false,
-                                Length = 9,
                                 IsAnsi = true
                             }
                         }).ToList();
@@ -41,8 +40,32 @@ namespace EcommerceMvc.Dapper
                 }
             }
 
-            return new List<Inventory>();
+            return null;
+        }
 
+        public List<ProductGroups> GetGroups()
+        {
+            var sql = @"select * from [ECommerce].[dbo].[ProductGroups]";
+
+            using (var sqlConn = new SqlConnection("Data Source=.;Database=ECommerce;Integrated Security=True;"))
+            {
+                try
+                {
+                    sqlConn.Open();
+                    var groups = sqlConn.Query<ProductGroups>(sql).ToList();
+                    return groups;
+
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                    sqlConn.Close();
+                }
+            }
+
+            return null;
         }
     }
+
+   
 }

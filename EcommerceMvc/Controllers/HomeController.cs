@@ -75,7 +75,30 @@ namespace EcommerceMvc.Controllers
             };
             var password = GenerateHash(salt, registerModel.Password);
             person.Password = password;
-           _saveToDatabase.Save(person);
+            var address = new Address()
+            {
+                AddressLine1 = registerModel.InputAddress,
+                AddressLine2 = registerModel.InputAddress2,
+                ApartmentNo = registerModel.ApartmentNo,
+                CreateDate = DateTime.Now,
+                PoBox = registerModel.PoBox,
+                HouseNo = registerModel.HouseNo,
+                State = registerModel.InputState,
+                UpdatedBy = registerModel.FirstName,
+                UpdateDate = DateTime.Now,
+                ZipCode = registerModel.InputZip,
+                City = registerModel.City
+            };
+
+
+            using (var trans = _saveToDatabase.GetTraction())
+            {
+                _saveToDatabase.Save(person);
+                address.PersonId = person.Id;
+                _saveToDatabase.Save(address);
+                trans.Complete();
+            }
+           
             TempData["UserMessage"] = new SuccessMessage { CssClassName = "alert alert-success", Title = "Register Successful", Message = "Operation Done." };
             return RedirectToAction("Index", "Home");
         }

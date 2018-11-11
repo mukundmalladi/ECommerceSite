@@ -13,7 +13,6 @@ namespace EcommerceMvc.Controllers
     [ExceptionHandle]
     public class ProductsController : Controller
     {
-
         private readonly ILoggedInUser _loggedInUser;
 
         public ProductsController(ILoggedInUser loggedInUser)
@@ -24,25 +23,32 @@ namespace EcommerceMvc.Controllers
         // GET: Products
         public ActionResult Index()
         {
+            //var getProducts = new InventoryQuery().GetGroups();
+           // var rows = 
+           // ViewBag.Prdu
             return View();
         }
 
         public ActionResult GetById(long? productId)
         {
             var inventorylist = new AllProducts();
-            var groupName = (GroupName) productId;
-            var query = new InventoryQuery().GetInventories(groupName.ToString());
-
-            foreach (var inventory in query)
+            if (productId != null)
             {
-                var inverntoryModel = new InventoriesModel()
-                {
-                    Id = inventory.Id,
-                    GroupName = groupName.ToString(),
-                    ItemsCount = inventory.ItemsCount,
-                    ProductName = inventory.ProductName
-                };
-                inventorylist.InventoriesModels.Add(inverntoryModel);
+                var groupName = (GroupName) productId;
+                var query = new InventoryQuery().GetInventories(groupName.ToString());
+
+                if (query != null)
+                    foreach (var inventory in query)
+                    {
+                        var inverntoryModel = new InventoriesModel()
+                        {
+                            Id = inventory.Id,
+                            GroupName = groupName.ToString(),
+                            ItemsCount = inventory.ItemsCount,
+                            ProductName = inventory.ProductName
+                        };
+                        inventorylist.InventoriesModels.Add(inverntoryModel);
+                    }
             }
 
             return PartialView("ProductsGrid", inventorylist);
@@ -51,15 +57,13 @@ namespace EcommerceMvc.Controllers
 
         public ActionResult AddToCart(long productId, int quantity)
         {
+            var user = _loggedInUser.GetLoggedInUser(System.Web.HttpContext.Current);
+            if (user == null)
+            {
+                throw new HttpException("Unable to find User");
+            }
             try
             {
-                var user = _loggedInUser.GetLoggedInUser(System.Web.HttpContext.Current);
-
-                if (user == null)
-                {
-                    throw new HttpException("Unable to find User");
-                }
-
                 var settings = new ConnectionSettings(new Uri("http://127.0.0.1:9200")).DefaultIndex("usercart");
                 var client = new ElasticClient(settings);
 
@@ -71,7 +75,7 @@ namespace EcommerceMvc.Controllers
                 
                 var indexExist = client.Get<IndexToElasticSearch>(new GetRequest("usercart", "IndexToElasticSearch", user.Id));
 
-                if ( indexExist.IsValid && !indexExist.Found)
+                if (!indexExist.Found)
                 {
                    var indexResponse = client.Index(dataToIndex, descriptor => descriptor.Type("IndexToElasticSearch").Id(user.Id));
                     var indexResponseResult = indexResponse.ApiCall.Success;
@@ -103,8 +107,19 @@ namespace EcommerceMvc.Controllers
                     //TODO Handle errors
                 }
 
+                var searchResponse = client.Search<IndexToElasticSearch>(descriptor => descriptor.From(0).Size(100)
+                                           .Type("IndexToElasticSearch").Query(containerDescriptor => containerDescriptor
+                                           .Match(queryDescriptor => queryDescriptor.Field(search => search.Id).Query(user.Id.ToString()))));
+
+                if (searchResponse.IsValid)
+                {
+                  //  System.Web.HttpContext.Current.User.Identity.
+                    user.CartItems = searchResponse.Total;
+                }
+                
                 return new JsonResult()
                 {
+                    
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet,
                     Data = new {Success = true}
                 };

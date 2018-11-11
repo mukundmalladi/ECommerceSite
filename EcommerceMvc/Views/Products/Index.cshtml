@@ -5,25 +5,29 @@
 
 <h2>Products</h2>
 
+@section Scripts{ 
 <script type="text/javascript" src="@Url.Content("~/Scripts/products.js")"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
-
+}
 <div>
     <div id="dropdown">
         <select name="productsId" id="productsId" onchange="CallToController(this)">
             <option value="select" id="0">-- select --</option>
-            <option value="Beauty" id="1">Beauty</option>
+            <option value="Beauty" id="1">Automobile</option>
             <option value="Kitchen" id="2">Kitchen</option>
             <option value="Sports" id="3">Sports</option>
             <option value="Books" id="4">Books</option>
-            <option value="Automobile" id="5">Automobile</option>
+            <option value="Automobile" id="5">Beauty</option>
             <option value="Fruits" id="6">Fruits</option>
         </select>
-        <
     </div>
 </div>
 
-<div>
-    @Html.Partial("ProductsGrid");
-</div>
 
+@Html.Partial("ProductsGrid")
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert" id="successModel">
+    <strong>Successfull added to cart</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>

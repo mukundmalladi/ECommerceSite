@@ -23,7 +23,8 @@ namespace Migrations
                 .WithColumn("CreateDate").AsDateTime().Nullable()
                 .WithColumn("UpdateDate").AsDateTime().Nullable()
                 .WithColumn("UpdatedBy").AsString().Nullable()
-                .WithColumn("ApartmentNo").AsInt64().Nullable();
+                .WithColumn("ApartmentNo").AsInt64().Nullable()
+                .WithColumn("City").AsString().NotNullable();
         }
 
         public override void Down()

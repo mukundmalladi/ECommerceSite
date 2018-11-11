@@ -14,5 +14,6 @@
         }
 
         public string EmailId { get; set; }
+        public long CartItems { get; set; }
     }
 }

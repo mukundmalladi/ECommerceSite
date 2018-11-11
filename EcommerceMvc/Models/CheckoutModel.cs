@@ -5,7 +5,7 @@ using EcommerceMvc.Pocos;
 
 namespace EcommerceMvc.Models
 {
-    public class CheckoutModel
+    public class CheckoutModel :BaseViewModel
     {
         public CheckoutModel()
         {
@@ -16,6 +16,8 @@ namespace EcommerceMvc.Models
         public List<ProductsData> ProductsData { get; set; }
 
         public decimal TotalPriceOfAllProducts { get; set; }
+
+
     }
 
     public class ProductsData
@@ -36,5 +38,11 @@ namespace EcommerceMvc.Models
         public string ProductName { get; set; }
 
         public decimal Price { get; set; }
+    }
+
+    public class BaseViewModel
+    {
+        public string Name { get; set; }
+
     }
 }

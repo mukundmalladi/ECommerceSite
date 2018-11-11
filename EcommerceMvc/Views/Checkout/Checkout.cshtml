@@ -2,117 +2,86 @@
 
 @{
     ViewBag.Title = "checkout Model";
-    //.("companyname", "Company name is required.");
-
-    //if (IsPost)
-    //{
-    //    string companyname = Request.Form["addressLine1"];
-    //    string contactname = Request.Form["contactname"];
-    //    int employeecount = Request.Form["employees"].AsInt();
-
-    //}
-}
+  }
 
 
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/checkout.js")"></script>
-<div id="checkoutGrid">
 
-    @if (Model != null)
-{
-         // using (Html.BeginForm("Checkout", "Checkout"))
-         // {
-          @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-     <form class="form-horizontal" method="post"  name="CheckoutForm">
-    <div class="row">
-        <table>
-            <thead>
-            <tr>
-                <th> Product</th>
-                <th> Quantity</th>
-                <th> Price</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var productData in Model.ProductsData)
-            {
-                <tr class="productData">
-                    <td class="productsId" style="display: none" id="productId">
-                        @productData.ProductData.Id
-                    </td>
-                    <td class="products" id="productName">
-                        @productData.ProductData.ProductName
-                    </td>
-                    <td class="quantity" id="quantity">
-                        <input type="text" value="@productData.Quantity" onkeyup="UpdatePrice(this)" />
-                    </td>
-                    <td class="originalPrice" style="display: none" id="originalPrice">
-                        @productData.Price
-                    </td>
-                    <td class="price" id="calculatedPrice">
-                        @productData.Price
-                    </td>
-                </tr>
-            }
-            </tbody>
-            <tbody>
-            <tr>
-                <td> Total Price:</td>
-                <td id="totalPrice">
-                    @string.Format("{0:C}", @Model.TotalPriceOfAllProducts);
-                </td>
-            </tr>
-            </tbody>
-        </table>
+
+<div class="row">
+    <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Your cart</span>
+            <span class="badge badge-primary badge-pill">@Model.ProductsData.Count</span>
+        </h4>
+        <ul class="list-group">
+        @foreach (var productData in Model?.ProductsData)
+        {
+           
+            <li class="list-group-item">
+                <div class="productData">
+                 
+                        <h6 class="my-0" id="productName">@productData.ProductData.ProductName</h6>
+                        <small class="text-muted" id="productId" style="display: none">@productData.ProductData.Id</small>
+                        <input type="text" value="@productData.Quantity" onkeyup="UpdatePrice(this)" id="quantity"/>
+                        <div id="originalPrice" style="display: none">@productData.Price</div>
+                    <span class="price" id="calculatedPrice"> @productData.Price</span>
+                </div>
+            </li>
+
+         
+        }
+        @*<form class="card p-2">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Promo code">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-secondary">Redeem</button>
+                </div>
+            </div>
+        </form>*@
+        </ul>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Total (USD)</span>
+                <strong id="totalPrice">  @string.Format("{0:C}", @Model.TotalPriceOfAllProducts)</strong>
+            </li>
+        </ul>
     </div>
-
-    <div class="form-group" id="checkout">
-        <div class="col-md-offset-2 col-md-10">
-            <input id="Checkout" class="col-md-offset-2 col-md-10" type="button" value="Checkout" onclick="ShowOtherStory()" />
+    <div class="col-md-8 order-md-1">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="ship to" onclick="HideAddressFormFields(this)">
+            <label class="custom-control-label" for="ship to">Ship To This Address?</label>
+            
+            <address>
+                <strong>@Model.Name</strong><br>
+                @Model.AddressLine1<br>
+                456<br>
+                Dallas<br>
+                XX<br>
+                xxxxx
+            </address>
         </div>
-    </div>
-    <div id="addressDiv" class="form-group">
-        <table>
-            <thead>
-            <text Address: />
-            </thead>
-            <tbody>
-            <tr>
-                <td><label type="text">Address Line 1 : </label></td>
-                <td><input type="text" id="addressLine1" maxlength="20" /></td>
-
-            </tr>
-
-            <tr>
-                <td><label type="text">Address Line 2 : </label></td>
-                <td><input type="text" id="addressLine2" maxlength="20" /></td>
-                @Html.ValidationMessageFor(model => model.AddressLine2)
-            </tr>
-
-            <tr>
-                <td><label type="text">PoBox : </label></td>
-                <td><input type="text" id="poBox" maxlength="20" /></td>
-                @Html.ValidationMessageFor(model => model.PoBox)
-            </tr>
-            <tr>
-                <td><label type="text">ZipCode : </label></td>
-                <td><input type="text" id="zipCode" maxlength="20" /></td>
-                @Html.ValidationMessageFor(model => model.PoBox)
-            </tr>
-            <tr>
-                <td><label type="text">Apartment No : </label></td>
-                <td><input type="text" id="apartmentNo" maxlength="20" /></td>
-                @Html.ValidationMessageFor(model => model.ApartmentNo)
-            </tr>
-            <tr>
-                <td><label type="text">House No : </label></td>
-                <td><input type="text" id="houseNo" maxlength="20" /></td>
-                @Html.ValidationMessageFor(model => model.HouseNo)
-            </tr>
-            <tr>
-                <td><label type="text">State : </label></td>
-                <td>
-                    <select id="state">
+        <hr class="mb-4">
+        <form class="needs-validation" name="CheckoutForm" novalidate>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="inputAddress" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputAddress2">Address 2</label>
+                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" name="inputAddress2" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="mb-3">
+                    <label for="inputState">State</label>
+                    <select id="inputState" class="form-control" name="inputState">
                         <option value="">Select</option>
                         <option value="AL">Alabama</option>
                         <option value="AK">Alaska</option>
@@ -166,29 +135,100 @@
                         <option value="WI">Wisconsin</option>
                         <option value="WY">Wyoming</option>
                     </select>
-                    @Html.ValidationMessageFor(model => model.State)
-                </td>
-            </tr>
-            </tbody>
-            <tbody id="creditCardInfo">
-            <tr>
-                <td><label> CardNo:</label></td>
-                <td><input type="text" maxlength="16" min="16" id="creditCardInfo" /></td>
-                <td><label>Please note address should be same as shipping address</label></td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputZip">Zip</label>
+                    <input type="text" class="form-control" id="inputZip" name="inputZip" required>
+                </div>
+            </div>
+            <hr class="mb-4">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="same-address" name="same-address">
+                <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="save-info">
+                <label class="custom-control-label" for="save-info">Save this information for next time</label>
+            </div>
+            <hr class="mb-4">
+
+            <h4 class="mb-3">Payment</h4>
+
+            <div class="d-block my-3">
+                <div class="custom-control custom-radio">
+                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
+                    <label class="custom-control-label" for="credit">Credit card</label>
+                </div>
+                @*<div class="custom-control custom-radio">
+                    <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
+                    <label class="custom-control-label" for="debit">Debit card</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
+                    <label class="custom-control-label" for="paypal">Paypal</label>
+                </div>*@
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="cc-name">Name on card</label>
+                    <input type="text" class="form-control" id="cc-name" placeholder="" required>
+                    <small class="text-muted">Full name as displayed on card</small>
+                    <div class="invalid-feedback">
+                        Name on card is required
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="cc-number">Credit card number</label>
+                    <input type="text" class="form-control" id="cc-number" placeholder="" required>
+                    <div class="invalid-feedback">
+                        Credit card number is required
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="cc-expiration">Expiration</label>
+                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
+                    <div class="invalid-feedback">
+                        Expiration date required
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="cc-expiration">CVV</label>
+                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
+                    <div class="invalid-feedback">
+                        Security code required
+                    </div>
+                </div>
+            </div>
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+        </form>
     </div>
-
-    <div class="form-group" id="submitButton">
-        <div class="col-md-offset-2 col-md-10">
-            <!--<input type="submit" value="Submit" class="submit" />-->
-
-            <input type="submit" value="Checkout" class="btn btn-default" id="SubmitCheckOutModel" onclick="validateForm()" />
-        </div>
-    </div>
-    </form>
-      }
-    
-
 </div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+//bootstrap validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+        window.addEventListener('submit', function () {
+            validateForm();
+        }, false);
+    })();
+
+</script>

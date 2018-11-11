@@ -51,6 +51,7 @@
     <Compile Include="4_OrderTable.cs" />
     <Compile Include="5_ProductOrderTable.cs" />
     <Compile Include="3_ProductTable.cs" />
+    <Compile Include="CreditCardInformation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="7_ShippingAddressTable.cs" />

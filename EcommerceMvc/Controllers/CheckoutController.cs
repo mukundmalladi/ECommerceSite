@@ -28,6 +28,7 @@ namespace EcommerceMvc.Controllers
             _saveToDatabase = saveToDatabase;
         }
         
+        [HttpGet]
         public ActionResult Index()
         {
             try
@@ -38,14 +39,16 @@ namespace EcommerceMvc.Controllers
                 {
                     throw new HttpException("Unable to find User");
                 }
-                
-                
+
+                var personAddress = new PersonQuery().GetPersonWithAddress(user.Id);
+
+
                 var settings = new ConnectionSettings(new Uri("http://127.0.0.1:9200"))
                     .DefaultIndex("usercart").DisableDirectStreaming();
 
                 var client = new ElasticClient(settings);
 
-                var searchResponse = client.Search<IndexToElasticSearch>(descriptor => descriptor.From(0).Size(10)
+                var searchResponse = client.Search<IndexToElasticSearch>(descriptor => descriptor.From(0).Size(100)
                     .Type("IndexToElasticSearch")
                     .Query(containerDescriptor => containerDescriptor
                     .Match(queryDescriptor => queryDescriptor.Field(search => search.Id).Query(user.Id.ToString()))));
@@ -94,6 +97,13 @@ namespace EcommerceMvc.Controllers
                         }
                     }
 
+                    checkoutModel.AddressLine1 = personAddress.Address.AddressLine1;
+                    checkoutModel.AddressLine2 = personAddress.Address.AddressLine2;
+                    checkoutModel.City = personAddress.Address.City;
+                    checkoutModel.State = personAddress.Address.State;
+                    if (personAddress.Address.ZipCode != null)
+                        checkoutModel.ZipCode = personAddress.Address.ZipCode.Value;
+                    checkoutModel.Name = user.FirstName;
                     checkoutModel.TotalPriceOfAllProducts = totalListOfProducts;
 
                     return View("Checkout", checkoutModel);
@@ -109,16 +119,11 @@ namespace EcommerceMvc.Controllers
         }
 
         [HttpPost]
-        public JsonResult Checkout(FullCheckOutModel checkoutModel)
+        public ActionResult Checkout(FullCheckOutModel checkoutModel)
         {
-           // if (!ModelState.IsValid)
-            {
-               // var errorMessage = ModelState.Values.ForEach(x => x.Errors.)
-           //     return new JsonResult() {Data = new {success = false, Message = "Enter valid data"}};
-            }
-
             try
             {
+                Person personAddress = null;
                 var user = _loggedInUser.GetLoggedInUser(System.Web.HttpContext.Current);
 
                 if (user == null)
@@ -135,7 +140,11 @@ namespace EcommerceMvc.Controllers
                 }
 
                 var products = new ProductsQuery().GetFromDatabase(listOfProducts.Keys.ToList());
-
+                var sameAsHomeAddress = checkoutModel.SameAddress;
+                if (sameAsHomeAddress)
+                {
+                     personAddress = new PersonQuery().GetPersonWithAddress(user.Id);
+                }
                 using (var transaction = _saveToDatabase.GetTraction())
                 {
 
@@ -151,9 +160,8 @@ namespace EcommerceMvc.Controllers
                     var randorNumber = new Random(12);
                     foreach (var product in products)
                     {
-                        long quant;
                         var cost = 0M;
-                        if (listOfProducts.TryGetValue(product.Id, out quant))
+                        if (listOfProducts.TryGetValue(product.Id, out var quant))
                         {
                             cost = quant * product.Price;
                             totalPayablePrice = totalPayablePrice + cost;
@@ -171,21 +179,21 @@ namespace EcommerceMvc.Controllers
 
                             var shippingAddress = new ShippingAddress
                             {
-                                AddressLine1 = checkoutModel.AddressLine1,
-                                AddressLine2 = checkoutModel.AddressLine2,
-                                ApartmentNo = checkoutModel.ApartmentNo,
+                                AddressLine1 = sameAsHomeAddress ? personAddress.Address.AddressLine1 ?? checkoutModel.AddressLine1 : null,
+                                AddressLine2 = sameAsHomeAddress ? personAddress.Address.AddressLine2 ?? checkoutModel.AddressLine2 : null,
+                                //  ApartmentNo = checkoutModel.ApartmentNo,
                                 CreateDate = DateTime.Now,
                                 CreateDateTime = DateTime.Now,
                                 HouseNo = checkoutModel.HouseNo,
-                                PoBox = checkoutModel.PoBox,
+                                //PoBox = checkoutModel.PoBox,
                                 ProductOrderId = productOrder.Id,
-                                SameAsHomeAddress = true,
-                                State = checkoutModel.State,
-                                ZipCode = checkoutModel.ZipCode,
+                                SameAsHomeAddress = sameAsHomeAddress,
+                                State = sameAsHomeAddress ? personAddress.Address.State ?? checkoutModel.State: null,
+                                ZipCode = sameAsHomeAddress ? personAddress.Address.ZipCode : checkoutModel.ZipCode,
                                 ShippingCompany = "My Company",
                                 UpdateDate = DateTime.Now,
                                 UpdatedBy = "System",
-                                TrackingId = randorNumber.Next() //can call a webservice to shipping company and get data
+                                TrackingId = randorNumber.Next(1000) //can call a webservice to shipping company and get data 
                             };
                             _saveToDatabase.Save(shippingAddress);
                         }

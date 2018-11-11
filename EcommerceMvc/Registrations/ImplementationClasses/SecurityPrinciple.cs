@@ -7,11 +7,11 @@ namespace EcommerceMvc.Registrations.ImplementationClasses
 {
     public class SecurityPrinciple : ISecurityPrincple, IIdentity
     {
-        private readonly User user;
+        private readonly User _user;
 
         public SecurityPrinciple(User user)
         {
-            this.user = user;
+            this._user = user;
         }
 
         public bool IsInRole(string role)
@@ -33,16 +33,18 @@ namespace EcommerceMvc.Registrations.ImplementationClasses
         {
             get
             {
-                return user != null;
+                return _user != null;
             }           
         }
 
         public User User
         {
-            get { return user; }
+            get { return _user; }
             
         }
 
         public string FullName { get; set; }
+
+        
     }
 }

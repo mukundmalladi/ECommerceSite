@@ -1,4 +1,6 @@
-﻿
+﻿$(document).ready(function () {
+    $("#successModel").hide();
+});
 
 function CallToController(a) {
 
@@ -29,9 +31,9 @@ function AddToCart(a, b) {
         cache: true, //Check this
         success: function (response) {
             var result = response;
-            var data = result.Data;
-            if (data.Success == true) {
-                Alert("Added to cart successfully");
+            var data = result.Success;
+            if (data === true) {
+                $("#successModel").show();
             }
         }
        

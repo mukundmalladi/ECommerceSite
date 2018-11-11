@@ -26,6 +26,7 @@ namespace Migrations
                 .WithColumn("AddressLine2").AsString().Nullable()
                 .WithColumn("State").AsString().NotNullable()
                 .WithColumn("CreateDate").AsDateTime().Nullable()
+                .WithColumn("City").AsString().Nullable()
                 .WithColumn("UpdateDate").AsDateTime().Nullable()
                 .WithColumn("UpdatedBy").AsString().Nullable()
                 .WithColumn("ApartmentNo").AsInt64().Nullable();

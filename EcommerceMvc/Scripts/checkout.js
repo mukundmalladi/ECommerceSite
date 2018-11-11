@@ -6,27 +6,26 @@ $(document).ready(function() {
 });
 
 function validateForm() {
-
-    if (!confirm("Confirm you want to checkout")) {
-        return;
-    } 
-        var addressLine1 = document.forms["CheckoutForm"]["addressLine1"].value;
-        var addressLine2 = document.forms["CheckoutForm"]["addressLine2"].value;
-        var poBox = document.forms["CheckoutForm"]["poBox"].value;
-        var apartmentNo = document.forms["CheckoutForm"]["apartmentNo"].value;
-        var houseNo = document.forms["CheckoutForm"]["houseNo"].value;
-        var state = document.forms["CheckoutForm"]["state"].value;
-        var creditCard = document.forms["CheckoutForm"]["creditCardInfo"].value;
-        var zipCode = document.forms["CheckoutForm"]["zipCode"].value;
     
+        var addressLine1 = document.forms["CheckoutForm"]["inputAddress"].value;
+        var addressLine2 = document.forms["CheckoutForm"]["inputAddress2"].value;
+        var city = document.forms["CheckoutForm"]["city"].value;
+        var zipCode = document.forms["CheckoutForm"]["inputZip"].value;
+        var state = document.forms["CheckoutForm"]["inputState"].value;
+        var sameAddress = document.forms["CheckoutForm"]["same-address"].value;
+        var saveInfo = document.forms["CheckoutForm"]["save-info"].value;
+        var credit = document.forms["CheckoutForm"]["credit"].value;//
+        var creditCardName = document.forms["CheckoutForm"]["cc-name"].value;
+        var creditCardNumber = document.forms["CheckoutForm"]["cc-number"].value;//
+        var creditCardExpiration = document.forms["CheckoutForm"]["cc-expiration"].value;
+        var creditCardCvv = document.forms["CheckoutForm"]["cc-cvv"].value;
 
     var productsData = [];
     $(".productData").each(function(rowIndex, r) {
         var data = {};
-        var id = $(this)[0].children.productId.textContent.trim();
-        var productName = $(this)[0].children.productName.textContent.trim();
-        var quantityTr = $(this)[0].children.quantity;
-        var quantity = $(quantityTr).find("select").val().trim();
+        var id = $(this).find("#productId")[0].textContent.trim();
+        var productName = $(this).find("#productName")[0].textContent.trim();
+        var quantity = $(this).find("#quantity")[0].value.trim();
         data.ProductData = { Id: id, ProductName: productName };
         data.Quantity = quantity;
         productsData.push(data);
@@ -35,9 +34,10 @@ function validateForm() {
             type: 'POST',
             url: '/Checkout/Checkout',
             data: {
-                ProductsData: productsData, ZipCode: zipCode, PoBox: poBox,
-                HouseNo: houseNo, ApartmentNo: apartmentNo, AddressLine1: addressLine1,
-                AddressLine2: addressLine2, State: state
+                ProductsData: productsData, ZipCode: zipCode, City: city,
+                SameAddress: sameAddress === "on", SaveInfo: saveInfo === "on", AddressLine1: addressLine1,
+                AddressLine2: addressLine2, State: state, CreditCard: credit, CreditCardName: creditCardName, CreditCardNumber: creditCardNumber,
+                CreditCardExpiration: creditCardExpiration, CreditCardCvv: creditCardCvv
             },
            //Check this
             success: function (data) {
@@ -62,17 +62,17 @@ function validateForm() {
    
 }
 
-function UpdatePrice(a) {
-    var newQuantity = a.value;
+function UpdatePrice(selector) {
+    var newQuantity = selector.value;
     var totalPrice = $("#totalPrice");
-    var parent = $(a).parent();
+    var parent = $(selector);
     var nextSibling = parent[0].nextElementSibling;
     var price = nextSibling.textContent.trim();
     var parsePrice = parseFloat(price);
     var textContent = totalPrice[0].textContent.replace(/[^0-9.-]+/g, "");
     var parsedTotalPrice = parseFloat(textContent.trim());
 
-    if (parsePrice !== NaN && parsedTotalPrice !== NaN) {
+    if (!isNaN(parsePrice) && !isNaN(parsedTotalPrice)) {
         var newPrice = parsePrice * newQuantity;
         var parentAgain = $(nextSibling).parent();
         var find = parentAgain.find("#calculatedPrice");
@@ -88,7 +88,7 @@ function UpdatePrice(a) {
         var value = parseFloat(r.textContent);
         totalCalculatedPrice = totalCalculatedPrice + value;
     });
-    (totalPrice)[0].innerHTML = "$" + (totalCalculatedPrice).toFixed(2);
+    (totalPrice)[0].innerHTML = "$" + totalCalculatedPrice.toFixed(2);
 }
 
 
@@ -96,4 +96,15 @@ function ShowOtherStory() {
     $("#addressDiv").show();
     $("#submitButton").show();
     $("#Checkout").hide();
+}
+
+
+function HideAddressFormFields(value) {
+    $(".form-row ").each(function (rowIndex, r) {
+        r.style.display = "none";
+    }); 
+    $(".form-row ").find("input").each(function (rowIndex, r) {
+        r.required = false;
+    }); 
+
 }

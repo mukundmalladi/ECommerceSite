@@ -1,4 +1,5 @@
 ﻿using System;
+using EcommerceMvc.Models;
 using PetaPoco;
 
 namespace EcommerceMvc.Pocos
@@ -37,5 +38,7 @@ namespace EcommerceMvc.Pocos
 
         [Column]
         public string Salt { get; set; }
+
+        public Address Address { get; set; }
     }
 }
