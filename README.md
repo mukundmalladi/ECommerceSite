@@ -1,4 +1,4 @@
-#### ECommerceSite
+# ECommerceSite
 Welcome to Ecommerce site. 
 This is a basic Ecommerce web application where users can register, login view products, add products to cart and finally checkout.
 This web application is just a skeleton to huge Ecommerce application.
