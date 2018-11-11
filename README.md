@@ -14,13 +14,13 @@ I used many open source libraries to build up the application. The following are
 5. For client side validations I used the validation offered by Javascript, bootstrap and Jquery
 6. The view and desgin is done using bootstrap 4.
 
+*Notes*
 The web application does have a credit card info but technically we should not be storing credit card info since that's not compliant.
 In future we can interact with third party services like paypal, Strip etc. Should be a easy code change
 We can also work with shipping vendors like fedex etc to track sites - but that's a long shot.
-
-### **Notes**
 The code is written in very simple format. Standard coding practices are not applied in some cases. Refactoring is one of the todo on my list.
 The project on the whole can be improved a lot but adding lot of functionalities.
+This is is a fun project that I developed so that I can learn more by developing the project on my own from scratch .
 
 ### Some of the **TODO's** on my list are:
 1. Adding view my orders screen under user name
@@ -51,4 +51,16 @@ Here is few screen shots of the projects
 ![Image](/EcommerceMvc/Images/CheckoutModel.PNG?raw=true "Checkout View Page")
 ![Image](/EcommerceMvc/Images/InteractivePriceUpdate.PNG?raw=true "InteractivePriceUpdate Page")
 
+## Acknowledgments
+
+I would like to thank internet( :smiley: )  and Google for allowing me to build this site(atleast for where it is now). I learnt a lot from the open source projects on how to build the application and what pattern to use. So thank you Google and internet for helping me google things.
+
+Also I learnt a lot on stuff from the below links:
+1. For Dapper: https://dapper-tutorial.net/result-multi-mapping
+2. For Bootstrap: https://getbootstrap.com/docs/4.1/getting-started/introduction/
+3. For MVC framwork: https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions/getting-started-with-aspnet-mvc4/intro-to-aspnet-mvc-4
+4. For Jquery: https://api.jquery.com/
+5. For Elastic Search: https://www.elastic.co/guide/en/elasticsearch/client/net-api/current/elasticsearch-net-getting-started.html
+
+*Note*:  
 **PS**: Please ignore my typo's or grammatical errors.
